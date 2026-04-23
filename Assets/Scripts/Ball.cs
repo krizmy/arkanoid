@@ -54,12 +54,6 @@ public class Ball : MonoBehaviour, IPointerDownHandler
         {
             _launchDelay = StartCoroutine(LaunchDelay());
         }
-
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            _rigidbody.linearVelocity = Vector3.zero;
-            _rigidbody.angularVelocity = 0;
-        }
     }
 
     private void PauseBall()
@@ -112,7 +106,7 @@ public class Ball : MonoBehaviour, IPointerDownHandler
 
     private void FixedUpdate()
     {
-        _reflectedDirection = _rigidbody.linearVelocity * JumpForce;
+        _reflectedDirection = _rigidbody.linearVelocity.normalized * JumpForce;
     }
 
     private IEnumerator AccelerateBall()
@@ -138,9 +132,10 @@ public class Ball : MonoBehaviour, IPointerDownHandler
 
     private void ReturnObjToStartPos()
     {
+        _rigidbody.linearVelocity = Vector2.zero;
+        _rigidbody.angularVelocity = 0f;
         transform.position = _startBallPosition;
         Platform.transform.position = _startPlatformPosition;
-        _rigidbody.linearVelocity = Vector2.zero;
         _ballOnPlatform = true;
 
     }
@@ -149,7 +144,7 @@ public class Ball : MonoBehaviour, IPointerDownHandler
     {
         if (_ballOnPlatform)
         {
-            transform.position = new Vector2(Platform.transform.position.x, transform.position.y);
+            transform.position = new Vector2(Platform.transform.position.x, _startBallPosition.y);
         }
     }
 
@@ -159,7 +154,7 @@ public class Ball : MonoBehaviour, IPointerDownHandler
         Vector2 YballVelocity = _rigidbody.linearVelocity;
         if (Mathf.Abs(YballVelocity.y) < minYvelocity)
         {
-            YballVelocity.y = YballVelocity.y > 0 ? -minYvelocity : minYvelocity;
+            YballVelocity.y = YballVelocity.y > 0 ? minYvelocity : -minYvelocity;
             _rigidbody.linearVelocity = YballVelocity.normalized * JumpForce;
         }
 
