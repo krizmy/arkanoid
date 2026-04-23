@@ -1,26 +1,35 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelManager: MonoBehaviour
+public class LevelManager : MonoBehaviour
 {
     public static int _behaviour;
     public Block Block;
     public BlockSpawner BlockSpawner;
+    public List<Color> BackgroundColors = new List<Color>();
 
     private delegate void _blockBehaviours();
+
     private delegate void _spawnBehaviours();
 
     private void Awake()
     {
         int levelIndex = SceneManager.GetActiveScene().buildIndex;
         SetupLevel(levelIndex);
+        ChangeBackgroundColor();
 
         Block.gameObject.SetActive(false);
     }
 
+    private void ChangeBackgroundColor()
+    {
+        Color newColor = BackgroundColors[Random.Range(0, BackgroundColors.Count)];
+        Camera.main.backgroundColor = newColor;
+    }
+
     private void SetupLevel(int levelIndex)
     {
-     
         _blockBehaviours[] blockBehaviours = new _blockBehaviours[]
         {
             Block.Behaviour1, Block.Behaviour2, Block.Behaviour3
@@ -42,6 +51,7 @@ public class LevelManager: MonoBehaviour
             levelCombination = GenerateUniqueCombination();
             LevelCombinationsStorage.Combinations.Add(levelIndex, levelCombination);
         }
+
         _behaviour = levelCombination.SpawnIndex;
         spawnBehabiours[levelCombination.BehaviourIndex]();
         blockBehaviours[levelCombination.SpawnIndex]();
@@ -55,7 +65,7 @@ public class LevelManager: MonoBehaviour
     private LevelCombination GenerateUniqueCombination()
     {
         int maxCombinations = 3 * 3;
-        if (LevelCombinationsStorage.Combinations.Count>= maxCombinations)
+        if (LevelCombinationsStorage.Combinations.Count >= maxCombinations)
         {
             return new LevelCombination(0, 0);
         }
@@ -66,11 +76,11 @@ public class LevelManager: MonoBehaviour
             spawn = Random.Range(0, 3);
             behaviour = Random.Range(0, 3);
             _behaviour = behaviour;
-        }
-        while(IsCombinationUsed(spawn,behaviour));
+        } while (IsCombinationUsed(spawn, behaviour));
+
         return new LevelCombination(spawn, behaviour);
     }
-    
+
 
     private bool IsCombinationUsed(int spawn, int behaviour)
     {
@@ -81,6 +91,7 @@ public class LevelManager: MonoBehaviour
                 return true;
             }
         }
+
         return false;
     }
 }

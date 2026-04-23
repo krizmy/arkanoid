@@ -10,7 +10,7 @@ public class ButtonsManager : MonoBehaviour
     public static event Action OnButtonPressed;
 
     public Button NextLevelButton;
-    public Button RestartLevelButton;
+    public Button[] RestartLevelButton;
     public Button[] ExitMenuButtons;
 
     private float _animationTime = 0.3f;
@@ -19,22 +19,18 @@ public class ButtonsManager : MonoBehaviour
     private void Awake()
     {
         NextLevelButton.onClick.AddListener(LoadNextLevel);
-        RestartLevelButton.onClick.AddListener(RestartLevel);
+        RestartLevel(RestartLevelButton);
         LoadMenu(ExitMenuButtons);
     }
 
     private void LoadNextLevel()
-    {        
+    {
         OnButtonPressed?.Invoke();
-        NextLevelButton.transform.DOScale(_targetSize, _animationTime).SetEase(Ease.InOutQuad).
-            OnComplete(() =>
-            {
-                NextLevelButton.transform.DOScale(Vector3.one, _animationTime).SetEase(Ease.InOutQuad).
-                OnComplete(() =>
-                {
-                    StartCoroutine(Delay());
-                });
-            });
+        NextLevelButton.transform.DOScale(_targetSize, _animationTime).SetEase(Ease.InOutQuad).OnComplete(() =>
+        {
+            NextLevelButton.transform.DOScale(Vector3.one, _animationTime).SetEase(Ease.InOutQuad)
+                .OnComplete(() => { StartCoroutine(Delay()); });
+        });
 
         IEnumerator Delay()
         {
@@ -44,24 +40,28 @@ public class ButtonsManager : MonoBehaviour
         }
     }
 
-    private void RestartLevel()
+    private void RestartLevel(Button[] buttons)
     {
-        OnButtonPressed?.Invoke();
-        RestartLevelButton.transform.DOScale(_targetSize, _animationTime).SetEase(Ease.InOutQuad).
-           OnComplete(() =>
-           {
-               RestartLevelButton.gameObject.transform.DOScale(Vector3.one, _animationTime).
-               OnComplete(() =>
-               {
-                   StartCoroutine(Delay());
-               });
-           });
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            int index = i;
 
-        IEnumerator Delay()
+            buttons[i].onClick.AddListener(() =>
+            {
+                OnButtonPressed?.Invoke();
+                buttons[index].transform.DOScale(_targetSize, _animationTime).SetEase(Ease.InOutQuad).OnComplete(() =>
+                {
+                    buttons[index].gameObject.transform.DOScale(Vector3.one, _animationTime)
+                        .OnComplete(() => { StartCoroutine(Delay(index)); });
+                });
+            });
+        }
+
+        IEnumerator Delay(int index)
         {
             yield return new WaitForSeconds(LoadingPanelsManager.AnimationTime);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            RestartLevelButton.transform.DOKill();
+            buttons[index].transform.DOKill();
         }
     }
 
@@ -74,15 +74,11 @@ public class ButtonsManager : MonoBehaviour
             buttons[i].onClick.AddListener(() =>
             {
                 OnButtonPressed?.Invoke();
-                buttons[index].transform.DOScale(_targetSize, _animationTime).SetEase(Ease.InOutQuad).
-               OnComplete(() =>
-               {
-                   buttons[index].gameObject.transform.DOScale(Vector3.one, _animationTime).
-                   OnComplete(() =>
-                   {
-                       StartCoroutine(Delay(index));
-                   });
-               });
+                buttons[index].transform.DOScale(_targetSize, _animationTime).SetEase(Ease.InOutQuad).OnComplete(() =>
+                {
+                    buttons[index].gameObject.transform.DOScale(Vector3.one, _animationTime)
+                        .OnComplete(() => { StartCoroutine(Delay(index)); });
+                });
             });
         }
 

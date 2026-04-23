@@ -17,8 +17,8 @@ public class PanelsManager : MonoBehaviour
         {
             var text = WinLevelPanel.GetComponentInChildren<TMP_Text>();
             var button = WinLevelPanel.GetComponentInChildren<Button>();
-
-            text.fontSize = 50;
+            
+            text.fontSize = 40;
             text.text = $"CONGERATS, YOU PASS THE GAME <3";
             button.gameObject.SetActive(false);
         }
@@ -26,6 +26,7 @@ public class PanelsManager : MonoBehaviour
 
     public void ActivateWinLevelPanel()
     {
+        FindObjectOfType<Ball>().GetComponent<SpriteRenderer>().enabled = false;
         WinLevelPanel.alpha = 0;
         WinLevelPanel.gameObject.SetActive(true);
         WinLevelPanel.DOFade(1f, 1f);
@@ -35,9 +36,10 @@ public class PanelsManager : MonoBehaviour
 
     public void ActivateLoseLevelPanel()
     {
+        FindObjectOfType<Ball>().GetComponent<SpriteRenderer>().enabled = false;
         LoseLevelPanel.alpha = 0;
         LoseLevelPanel.gameObject.SetActive(true);
         LoseLevelPanel.DOFade(1f, 1f);
-        OnPanelActivated?.Invoke();//Закрыть паузу в скрипте пауз менеджер
+        OnPanelActivated?.Invoke();//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     }
 }

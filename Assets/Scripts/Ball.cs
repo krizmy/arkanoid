@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class Ball : MonoBehaviour, IPointerDownHandler
@@ -44,16 +45,6 @@ public class Ball : MonoBehaviour, IPointerDownHandler
     private void Update()
     {
         ConnectPositions();
-
-        //if (_rigidbody.linearVelocity.magnitude < _reflectedDirection.magnitude - 0.5f && _accelerate && !_ballOnPlatform)
-        //{
-        //    StartCoroutine(AccelerateBall());
-        //}
-
-        if (_rigidbody.IsSleeping() && !_ballOnPlatform)
-        {
-            _launchDelay = StartCoroutine(LaunchDelay());
-        }
     }
 
     private void PauseBall()
@@ -177,14 +168,14 @@ public class Ball : MonoBehaviour, IPointerDownHandler
             _ballOnPlatform = false;
         }
     }
-
+    
     private void ChangeHorizontalBordersColor()
     {
         GameObject[] horizontalBorders = GameObject.FindGameObjectsWithTag("HorizontalBorders");
         Color newColor = new Color(Random.value, Random.value, Random.value);
         foreach (var border in horizontalBorders)
         {
-            SpriteRenderer borderRender = border.GetComponent<SpriteRenderer>();
+            Image borderRender = border.GetComponent<Image>();
             borderRender.color = newColor;
         }
     }
@@ -195,7 +186,7 @@ public class Ball : MonoBehaviour, IPointerDownHandler
         Color newColor = new Color(Random.value, Random.value, Random.value);
         foreach (var border in verticalBorders)
         {
-            SpriteRenderer borderRender = border.GetComponent<SpriteRenderer>();
+            Image borderRender = border.GetComponent<Image>();
             borderRender.color = newColor;
         }
     }
