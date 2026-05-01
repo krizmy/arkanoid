@@ -97,30 +97,14 @@ public class Ball : MonoBehaviour, IPointerDownHandler
 
     private void FixedUpdate()
     {
+        if (Mathf.Abs(_rigidbody.linearVelocity.magnitude) < JumpForce - 0.5f)
+        {
+            _rigidbody.linearVelocity = _rigidbody.linearVelocity.normalized * JumpForce; 
+        }
+        
         _reflectedDirection = _rigidbody.linearVelocity.normalized * JumpForce;
     }
-
-    private IEnumerator AccelerateBall()
-    {
-        yield return new WaitForSeconds(0.1f);
-        _rigidbody.linearVelocity = Vector3.one * JumpForce;
-        _accelerate = false;
-        yield return new WaitForSeconds(0.1f);
-        _accelerate = true;
-    }
-
-    private IEnumerator LaunchDelay()
-    {
-        if (!PauseManager.PausedState)
-        {
-            yield return new WaitForSeconds(0.01f);
-            _rigidbody.linearVelocity = Random.insideUnitCircle.normalized * JumpForce;
-            _launchDelay = null;
-            Debug.LogWarning("NEED TO LAUNCH BALL AGAIN!");
-        }
-
-    }
-
+    
     private void ReturnObjToStartPos()
     {
         _rigidbody.linearVelocity = Vector2.zero;

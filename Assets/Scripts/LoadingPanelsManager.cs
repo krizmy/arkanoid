@@ -17,6 +17,7 @@ public class LoadingPanelsManager : MonoBehaviour
 
     private float _animationTime = 2;
     private AnimationType _type;
+
     private enum AnimationType
     {
         Width,
@@ -34,9 +35,15 @@ public class LoadingPanelsManager : MonoBehaviour
     {
         switch (_type)
         {
-            case AnimationType.Width: AnimateWidthPanels(); break;
-            case AnimationType.Height: AnimateHeightPanels(); break;
-            case AnimationType.Diagonal: AnimateDiagonalPanels(); break;
+            case AnimationType.Width:
+                AnimateWidthPanels();
+                break;
+            case AnimationType.Height:
+                AnimateHeightPanels();
+                break;
+            case AnimationType.Diagonal:
+                AnimateDiagonalPanels();
+                break;
         }
     }
 
@@ -50,28 +57,31 @@ public class LoadingPanelsManager : MonoBehaviour
     private void AnimateWidthPanels()
     {
         OnLoadingPanelActivated?.Invoke();
-        Vector3 endPositionLeftPart = new Vector3(-529, 0);
-        Vector3 endPositionRightPart = new Vector3(529, 0);
+        Vector3 endPositionLeftPart = new Vector3(519, 0);
+        Vector3 endPositionRightPart = new Vector3(-519, 0);
         Sequence seq = DOTween.Sequence();
-        seq.Append(_leftPart.DOAnchorPos(endPositionLeftPart, _animationTime)).Join(_rightPart.DOAnchorPos(endPositionRightPart, _animationTime));
+        seq.Append(_leftPart.DOAnchorPos(endPositionLeftPart, _animationTime))
+            .Join(_rightPart.DOAnchorPos(endPositionRightPart, _animationTime));
     }
 
     private void AnimateHeightPanels()
     {
         OnLoadingPanelActivated?.Invoke();
-        Vector3 endPositionTopPart = new Vector3(0, 244);
-        Vector3 endPositionBottomPart = new Vector3(0, -244);
+        Vector3 endPositionTopPart = new Vector3(0, -215);
+        Vector3 endPositionBottomPart = new Vector3(0, 215);
         Sequence seq = DOTween.Sequence();
-        seq.Append(_topPart.DOAnchorPos(endPositionTopPart, _animationTime)).Join(_bottomPart.DOAnchorPos(endPositionBottomPart, _animationTime));
+        seq.Append(_topPart.DOAnchorPos(endPositionTopPart, _animationTime))
+            .Join(_bottomPart.DOAnchorPos(endPositionBottomPart, _animationTime));
     }
 
     private void AnimateDiagonalPanels()
     {
         OnLoadingPanelActivated?.Invoke();
-        Vector3 endPositionTopLeftPart = new Vector3(-229, 454);
-        Vector3 endPositionBottomRightPart = new Vector3(178, -431);
+        Vector3 endPositionTopLeftPart = new Vector3(772, 200);
+        Vector3 endPositionBottomRightPart = new Vector3(-772, -200);
         Sequence seq = DOTween.Sequence();
-        seq.Append(_topLeftPart.DOAnchorPos(endPositionTopLeftPart, _animationTime)).Join(_bottomRightPart.DOAnchorPos(endPositionBottomRightPart, _animationTime));
+        seq.Append(_topLeftPart.DOAnchorPos(endPositionTopLeftPart, _animationTime))
+            .Join(_bottomRightPart.DOAnchorPos(endPositionBottomRightPart, _animationTime));
     }
 
     private void OnDestroy()

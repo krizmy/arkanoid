@@ -34,7 +34,16 @@ public class ContinueButton : MonoBehaviour
             float animationTime = 3f;
             FindFirstObjectByType<MenuManager>().ActivateLoadingScreen(animationTime);
             yield return new WaitForSeconds(animationTime);
-            SceneManager.LoadScene(ProgressService.UnlockedLevel);
+            int levelToLoad = ProgressService.UnlockedLevel;
+            
+            int maxLevelIndex = SceneManager.sceneCountInBuildSettings - 1;
+            
+            if (levelToLoad > maxLevelIndex)
+            {
+                levelToLoad = maxLevelIndex;
+            }
+
+            SceneManager.LoadScene(levelToLoad);
         }
     }
 }
